@@ -6,11 +6,14 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/tfg?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - DATASOURCE_HOST=host.docker.internal:3307
+      - DATASOURCE_USER=root
+      - DATASOURCE_PASSWORD=root
+      - DATASOURCE_DB=tfg
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATA_SOURCE_URL=jdbc:mysql://host.docker.internal:3307/tfg?autoReconnect=true&useSSL=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=TRUE
     networks:
       - app-network       
 
@@ -26,9 +29,8 @@ services:
   db:
     image: mysql:8.0.35
     environment:
-      MYSQL_DATABASE: tfg
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE=tfg
+      - MYSQL_ROOT_PASSWORD=root
     volumes:
       - db-data:/var/lib/mysql
       - ./createDB.sql:/docker-entrypoint-initdb.d/createDB.sql
@@ -39,6 +41,7 @@ services:
 
 networks:
   app-network:
+    driver: bridge
 
 volumes:
   db-data:

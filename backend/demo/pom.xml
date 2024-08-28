@@ -61,6 +61,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>marketmate-backend</finalName>
 	</build>
 
 </project>

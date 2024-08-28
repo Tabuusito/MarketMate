@@ -1,14 +1,19 @@
-# Usa una imagen base de OpenJDK 17
-FROM openjdk:17-slim
+FROM maven:3.9.5 AS build
 
 # Directorio donde se alojará la aplicación
 WORKDIR /app
 
-# Copia el archivo jar del proyecto Spring Boot
-COPY ./demo/target/demo-0.0.1-SNAPSHOT.jar /app
+COPY demo /app
+
+RUN mvn clean install
+#RUN mvn -f /app/pom.xml clean package
 
 # Expone el puerto donde corre Spring Boot
 EXPOSE 8080
 
-# Comando para correr la aplicación
-CMD ["java", "-jar", "demo-0.0.1-SNAPSHOT.jar"]
+#FROM openjdk:17-slim
+
+#COPY --from=build /app/target/marketmate-backend.jar /app
+
+ENTRYPOINT ["mvn","spring-boot:run"]
+#ENTRYPOINT ["java","-jar","/app/marketmate-backend.jar"]
